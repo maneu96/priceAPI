@@ -1,5 +1,5 @@
 /* ************************************************************************************************************************************/
-// This is the main implementation of the API service 
+// This is the main implementation of the API service
 // It connects to a websocket url, gets and processes the data, while listening and responding to requests in the communication ports
 /* ************************************************************************************************************************************/
 
@@ -30,8 +30,12 @@ async fn main() -> std::io::Result<()> {
     //
     /******************************************************************************************************************* */
     tokio::spawn(async move {
-        if let Err(e) = feed.connect_and_send().await {
-            eprintln!("Error while getting WebSocket feed: {}", e);
+        let delay_retry = 20; // In case the ws connection fails, there will be an attempt of a new connection in 20 s
+        loop {
+            if let Err(e) = feed.connect_and_send().await {
+                eprintln!("Error while getting WebSocket feed: {}, retrying in {} seconds", e, delay_retry);
+            }
+            tokio::time::sleep(tokio::time::Duration::from_secs(delay_retry)).await;
         }
     });
 
@@ -46,7 +50,6 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .app_data(receiver.clone()) // Clone the Mutex receiver so that it can be accessed further on
             .route("/", web::get().to(api_responder::respond)) // Routes the request to the proper response handle
-            //.route("/echo", web::post().to(api_responder::echo))
     })
     .bind("0.0.0.0:8080")? //Define the intended IP:Port where the communication will take place
     .run()

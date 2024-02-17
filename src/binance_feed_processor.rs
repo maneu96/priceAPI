@@ -1,6 +1,6 @@
-/* ************************************************************************************************************************************/
-// This is an implementation of a struct that introduces a method to parse and extract information (price,latency) from a binance feed
-/* ************************************************************************************************************************************/
+/* ***************************************************************************************************************************************/
+// This is an implementation of a struct that introduces a method to parse and extract information (price,latency) from a Binance data feed
+/* ***************************************************************************************************************************************/
 
 use serde_json::Value;
 use std::time::{SystemTime, UNIX_EPOCH};
