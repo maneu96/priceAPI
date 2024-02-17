@@ -26,7 +26,7 @@ impl BinanceFeedProcessor {
         let latency = SystemTime::now().duration_since(UNIX_EPOCH)?.as_millis() - binance_timestamp;
          
         // Build the output string by accessing the proper fields in the data_json, according to the structure of the binance feed (data_json["c"] for the price)
-        let output = format!("Price BTC/USDT: {} \nLatency (ms): {}\n",data_json["c"].to_string().trim_matches('\"'),latency);
+        let output = format!("Price BTC/USDT: {} \nBinance Timestamp (ms): {} \nLatency (ms): {}\n",data_json["c"].to_string().trim_matches('\"'),binance_timestamp,latency);
         Ok(output) //Return the output, with proper error handling
     }
 }
