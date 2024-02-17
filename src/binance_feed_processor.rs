@@ -17,16 +17,21 @@ impl BinanceFeedProcessor {
         //          Result<String, Box<dyn std::error::Error>> // Either a string with both the price and latency
         //                                                        (between the caller and binance timestamp) or an error message
         /***********************************************************************************************************************/
-        
+
         // Convert the data string into JSON Value so that it is easier to parse
-        let data_json: Value = serde_json::from_str(data)?; 
+        let data_json: Value = serde_json::from_str(data)?;
         //Parse the timeStamp of Binance (present in data_json["E"]) and cast it to u128
-        let binance_timestamp: u128 = (data_json["E"].to_string()).parse()?; 
+        let binance_timestamp: u128 = (data_json["E"].to_string()).parse()?;
         // Get the server's timestamp and calculate latency
-        let latency = SystemTime::now().duration_since(UNIX_EPOCH)?.as_millis() - binance_timestamp;
-         
+        //let latency = SystemTime::now().duration_since(UNIX_EPOCH)?.as_millis() - binance_timestamp;
+
         // Build the output string by accessing the proper fields in the data_json, according to the structure of the binance feed (data_json["c"] for the price)
-        let output = format!("Price BTC/USDT: {} \nBinance Timestamp (ms): {} \nLatency (ms): {}\n",data_json["c"].to_string().trim_matches('\"'),binance_timestamp,latency);
+        let output = format!(
+            "Price BTC/USDT: {} \nBinance Timestamp (ms): {} \nServer Timestamp (ms): {}\n",
+            data_json["c"].to_string().trim_matches('\"'),
+            binance_timestamp,
+            SystemTime::now().duration_since(UNIX_EPOCH)?.as_millis()
+        );
         Ok(output) //Return the output, with proper error handling
     }
 }
