@@ -29,13 +29,14 @@ The code is designed to be modular, addressing the separation of concerns and ma
 To deploy an instance of this code, ensure you have at least Rust installed and follow these steps:
 
 1. Clone the repository:
-
-sh git clone https://github.com/maneu96/priceAPI.git
-
+'''
+  git clone https://github.com/maneu96/priceAPI.git
+'''
 2. Change directory into the newly created folder:
-
-cmd cd priceAPI
-
+'''
+  cmd cd priceAPI
+'''
 3. Run the program:
-
-cmd cargo run
+'''
+  cmd cargo run
+'''
