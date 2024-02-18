@@ -6,7 +6,7 @@ This repository contains the code for an API that, when prompted with a HTTP GET
 
 Here's an example of a command and response in Postman:
 
-![Example Command and Response in Postman](URL_TO_YOUR_IMAGE)
+![Example Command and Response in Postman](images/Example_GET_HTTP.png)
 
 And a ping command:
 
@@ -28,15 +28,15 @@ The code is designed to be modular, addressing the separation of concerns and ma
 
 To deploy an instance of this code, ensure you have at least Rust installed and follow these steps:
 
-1. Clone the repository:
-'''
+1. Clone the repository
+```
   git clone https://github.com/maneu96/priceAPI.git
-'''
+```
 2. Change directory into the newly created folder:
-'''
+```
   cmd cd priceAPI
-'''
+```
 3. Run the program:
-'''
+```
   cmd cargo run
-'''
+```
