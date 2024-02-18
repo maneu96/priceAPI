@@ -30,7 +30,7 @@ To deploy an instance of this code, ensure you have at least Rust installed and 
 
 1. Clone the repository:
 
-cmd git clone https://github.com/maneu96/priceAPI.git
+sh git clone https://github.com/maneu96/priceAPI.git
 
 2. Change directory into the newly created folder:
 
