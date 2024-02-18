@@ -1,11 +1,14 @@
 /* ************************************************************************************************************************************/
 // This is an implementation of an API responder module
 // It is called by the main, whenever a response to a client request is necessary.
-// respond returns either a Responder with a string with an HTTP message or an error
+// respond returns either a Responder with a string with an HTTP message or an error and it calls the module BinanceFeedProcessor to 
+// handle the raw data . it is built in a way that could be expandable for other structures of raw data.(other exchanges, for instance)
 /* ************************************************************************************************************************************/
 use actix_web::{web, HttpResponse, Responder};
 use std::sync::Mutex;
 use tokio::sync::mpsc::Receiver;
+
+use crate::binance_feed_processor::BinanceFeedProcessor; // process raw data according to the binances raw data format
 
 pub async fn respond(receiver: web::Data<Mutex<Receiver<String>>>) -> impl Responder {
     /***********************************************************************************************************************/
@@ -24,7 +27,14 @@ pub async fn respond(receiver: web::Data<Mutex<Receiver<String>>>) -> impl Respo
         Ok(mut receiver) => {
             // Successfully acquired the lock, following step is to try receiving a message
             match receiver.try_recv() {
-                Ok(message) => HttpResponse::Ok().body(message),
+                Ok(message) => {
+                    if let Ok(m) = BinanceFeedProcessor::process(&message) {
+                        HttpResponse::Ok().body(m)
+                    }
+                    else {
+                        HttpResponse::InternalServerError().body("Failed to retrieve feed")
+                    }
+                }
                 Err(_) => HttpResponse::InternalServerError().body("Failed to retrieve feed"),
             }
         }

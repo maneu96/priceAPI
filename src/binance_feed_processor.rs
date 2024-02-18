@@ -27,7 +27,7 @@ impl BinanceFeedProcessor {
 
         // Build the output string by accessing the proper fields in the data_json, according to the structure of the binance feed (data_json["c"] for the price)
         let output = format!(
-            "Price BTC/USDT: {} \nBinance Timestamp (ms): {} \nServer Timestamp (ms): {}\n",
+            "Price BTC         : {} USDT \nBinance Timestamp : {} ms \nServer Timestamp  : {} ms\n",
             data_json["c"].to_string().trim_matches('\"'),
             binance_timestamp,
             SystemTime::now().duration_since(UNIX_EPOCH)?.as_millis()

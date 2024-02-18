@@ -33,7 +33,8 @@ async fn main() -> std::io::Result<()> {
         let delay_retry = 20; // In case the ws connection fails, there will be an attempt of a new connection in 20 s
         loop {
             if let Err(e) = feed.connect_and_send().await {
-                eprintln!("Error while getting WebSocket feed: {}, retrying in {} seconds", e, delay_retry);
+                eprintln!("Error while getting WebSocket feed: {}.\n if this behaviour was 
+                not intentional, retrying in {} seconds", e, delay_retry);
             }
             tokio::time::sleep(tokio::time::Duration::from_secs(delay_retry)).await;
         }

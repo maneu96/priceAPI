@@ -1,6 +1,6 @@
 /* ************************************************************************************************************************************/
-// This is an implementation of a struct that can establish a generic WebSocket connection, retrieve data using the BinanceFeed Processor
-// (but designed modularly to accomodate other processors) and send that information trough a Sender to other threads
+// This is an implementation of a struct that can establish a generic WebSocket connection, retrieve data from a websocket connection
+// (designed modularly to accomodate other processors) and send the raw data trough a Sender to other threads
 /* ************************************************************************************************************************************/
 
 use futures_util::StreamExt;
@@ -8,7 +8,6 @@ use native_tls::TlsConnector as NativeTlsConnector;
 use tokio::sync::mpsc::Sender;
 use tokio_tungstenite::{connect_async_tls_with_config, tungstenite::client::IntoClientRequest, Connector};
 
-use crate::binance_feed_processor::BinanceFeedProcessor; // import the binance feed processor module
 
 pub struct WebSocketFeed {
     sender: Sender<String>, // Sender that allows communication and a channel of communication with a Receiver on other threads.
@@ -51,8 +50,7 @@ impl WebSocketFeed {
             // Check if the message is text or binary (Expected types)
             if msg.is_text() || msg.is_binary() {
                 let data = msg.into_text()?; // CONVERT the message to text and get the string
-                let processed_data = BinanceFeedProcessor::process(&data)?;
-                self.sender.send(processed_data).await?; // SEND data to the other thread!
+                self.sender.send(data).await?; // SEND data to the other thread!
             }
         }
         Ok(())
