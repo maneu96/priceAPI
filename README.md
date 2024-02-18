@@ -10,11 +10,11 @@ Here's an example of a command and response in Postman:
 
 And a ping command:
 
-![Ping Command Example](URL_TO_YOUR_IMAGE)
+![Ping Command Example](images/pingServerIP.png)
 
 The server also contains the following inbound security rules that only allow connections via SSH, ICMP, and HTTP:
 
-![Inbound Security Rules](URL_TO_YOUR_IMAGE)
+![Inbound Security Rules](/images/Security_rules_Aws.png)
 
 ## Architecture
 
