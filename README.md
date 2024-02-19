@@ -36,9 +36,9 @@ To deploy an instance of this code, ensure you have at least Rust installed and 
 ```
 2. Change directory into the newly created folder:
 ```
-  cmd cd priceAPI
+  cd priceAPI
 ```
 3. Run the program:
 ```
-  cmd cargo run
+  cargo run
 ```
