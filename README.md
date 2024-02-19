@@ -24,6 +24,7 @@ The code is designed to be modular, addressing the separation of concerns and ma
 - `web_socket_feed`: Connects to the exchange through a WebSocket connection, requests its data feed, and sends it to the API side, so that whenever a response is required, the data feed is available on its thread.
 - `api_responder`: Handles the communication and functions to be executed on the API side.
 - `binance_feed_processor`: Parses and polishes the data feed to be presented as a response to a request.
+- `main` where the main flow of the program is dictated.
 
 ## Deployment
 
