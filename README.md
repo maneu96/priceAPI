@@ -12,6 +12,7 @@ And a ping command:
 
 ![Ping Command Example](images/pingServerIP.png)
 
+## Server rules
 The server also contains the following inbound security rules that only allow connections via SSH, ICMP, and HTTP:
 
 ![Inbound Security Rules](/images/Security_rules_Aws.png)
