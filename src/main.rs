@@ -26,7 +26,7 @@ async fn main() -> std::io::Result<()> {
 
     /******************************************************************************************************************* */
     //
-    // Section 1: Secundary thread that gets the ws feed and processes it accordingly
+    // Section 1: Secondary thread that gets the ws feed and processes it accordingly
     //
     /******************************************************************************************************************* */
     tokio::spawn(async move {
