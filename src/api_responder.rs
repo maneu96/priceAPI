@@ -9,7 +9,7 @@ use tokio::sync::watch::Receiver;
 
 use crate::binance_feed_processor::BinanceFeedProcessor;
 
-pub async fn respond(mut receiver: web::Data<Receiver<String>>) -> impl Responder {
+pub async fn respond( receiver: web::Data<Receiver<String>>) -> impl Responder {
     /***********************************************************************************************************************/
     //
     //  inputs :
