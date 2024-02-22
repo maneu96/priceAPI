@@ -8,8 +8,6 @@ mod binance_feed_processor;
 mod websocket_feed;
 
 use actix_web::{web, App, HttpServer};
-use std::sync::Mutex;
-use tokio::sync::mpsc;
 use tokio::sync::watch;
 
 #[tokio::main]
@@ -19,7 +17,7 @@ async fn main() -> std::io::Result<()> {
     /******************************************************************************************************************* */
 
     // Declare Sender and Receiver so that information can be exchanged between threads
-    let (sender, mut receiver) = watch::channel(String::from(""));//mpsc::channel(2048);
+    let (sender, receiver) = watch::channel(String::from(""));//mpsc::channel(2048);
     // Declare the websocket url from which the feed will be extracted
     let url = "wss://stream.binance.com:9443/ws/btcusdt@ticker";
     // Declare structure that contains the websocket connection and the feed processing and information exchange methods
