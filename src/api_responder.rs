@@ -5,43 +5,29 @@
 // handle the raw data . it is built in a way that could be expandable for other structures of raw data.(other exchanges, for instance)
 /* ************************************************************************************************************************************/
 use actix_web::{web, HttpResponse, Responder};
-use std::sync::Mutex;
-use tokio::sync::mpsc::Receiver;
+use tokio::sync::watch::Receiver;
 
-use crate::binance_feed_processor::BinanceFeedProcessor; // process raw data according to the binances raw data format
+use crate::binance_feed_processor::BinanceFeedProcessor;
 
-pub async fn respond(receiver: web::Data<Mutex<Receiver<String>>>) -> impl Responder {
+pub async fn respond(mut receiver: web::Data<Receiver<String>>) -> impl Responder {
     /***********************************************************************************************************************/
     //
-    //  inputs : ***********************************************************************************************************
-    //          receiver: web::Data<Mutex<Receiver<String>> // A Mutex encapsulated by the Data structure of the API. 
-    //                                                         it contains the receiver which can access the string 
-    //                                                         of the message to be transmitted to the client
-    // outputs: ************************************************************************************************************
+    //  inputs :
+    //          receiver: web::Data<Receiver<String>> // A Receiver encapsulated by the Data structure of the API.
+    //                                                  It can access the string of the message to be transmitted to the client
+    // outputs:
     //           impl Responder // An implied Responder that contains an HTTP response or an error message
     /***********************************************************************************************************************/
-    // Attempt to lock the receiver, handling the potential error without panicking
-    let lock_result = receiver.lock();
+    // `borrow_and_update` or `changed().await` can be used here depending on the use case.
+    // `borrow` gives us access to the latest value sent through the channel without waiting for a new value.
+    // If you want to wait for the next value, use `receiver.changed().await` instead.
 
-    match lock_result {
-        Ok(mut receiver) => {
-            // Successfully acquired the lock, following step is to try receiving a message
-            match receiver.try_recv() {
-                Ok(message) => {
-                    if let Ok(m) = BinanceFeedProcessor::process(&message) {
-                        HttpResponse::Ok().body(m)
-                    }
-                    else {
-                        HttpResponse::InternalServerError().body("Failed to retrieve feed")
-                    }
-                }
-                Err(_) => HttpResponse::InternalServerError().body("Failed to retrieve feed"),
-            }
-        }
-        Err(e) => {
-            // Handling the "mutex poisoning case", or other errors in acquiring the lock
-            eprintln!("Failed to lock the receiver: {:?}", e);
-            HttpResponse::InternalServerError().body("Internal server error")
-        }
+    let message = receiver.borrow().clone(); // Clone the message to avoid borrowing issues
+
+    // println!("{}", message); //Testing
+    if let Ok(m) = BinanceFeedProcessor::process(&message) {
+        HttpResponse::Ok().body(m)
+    } else {
+        HttpResponse::InternalServerError().body("Failed to retrieve feed")
     }
 }

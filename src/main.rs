@@ -10,6 +10,7 @@ mod websocket_feed;
 use actix_web::{web, App, HttpServer};
 use std::sync::Mutex;
 use tokio::sync::mpsc;
+use tokio::sync::watch;
 
 #[tokio::main]
 async fn main() -> std::io::Result<()> {
@@ -18,7 +19,7 @@ async fn main() -> std::io::Result<()> {
     /******************************************************************************************************************* */
 
     // Declare Sender and Receiver so that information can be exchanged between threads
-    let (sender, receiver) = mpsc::channel(128);
+    let (sender, mut receiver) = watch::channel(String::from(""));//mpsc::channel(2048);
     // Declare the websocket url from which the feed will be extracted
     let url = "wss://stream.binance.com:9443/ws/btcusdt@ticker";
     // Declare structure that contains the websocket connection and the feed processing and information exchange methods
@@ -46,7 +47,7 @@ async fn main() -> std::io::Result<()> {
     //
     /******************************************************************************************************************* */
 
-    let receiver = web::Data::new(Mutex::new(receiver)); // Encapsulate the receiver into a Mutex
+    let receiver = web::Data::new(receiver);//(Mutex::new(receiver)); // Encapsulate the receiver into a Mutex
     HttpServer::new(move || {
         App::new()
             .app_data(receiver.clone()) // Clone the Mutex receiver so that it can be accessed further on

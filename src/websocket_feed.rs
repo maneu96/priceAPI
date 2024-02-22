@@ -5,7 +5,7 @@
 
 use futures_util::StreamExt;
 use native_tls::TlsConnector as NativeTlsConnector;
-use tokio::sync::mpsc::Sender;
+use tokio::sync::watch::Sender;
 use tokio_tungstenite::{connect_async_tls_with_config, tungstenite::client::IntoClientRequest, Connector};
 
 
@@ -48,9 +48,14 @@ impl WebSocketFeed {
             let msg = msg?;
             // If a message has no errors
             // Check if the message is text or binary (Expected types)
+            
             if msg.is_text() || msg.is_binary() {
+               
                 let data = msg.into_text()?; // CONVERT the message to text and get the string
-                self.sender.send(data).await?; // SEND data to the other thread!
+                //println!("{}", data);
+                if let Err(e)  = self.sender.send(data) {
+                    eprintln!("{}",e);
+                }// SEND data to the other thread!
             }
         }
         Ok(())
