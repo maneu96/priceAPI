@@ -20,7 +20,7 @@ pub async fn respond( receiver: web::Data<Receiver<String>>) -> impl Responder {
     /***********************************************************************************************************************/
     // `borrow_and_update` or `changed().await` can be used here depending on the use case.
     // `borrow` gives us access to the latest value sent through the channel without waiting for a new value.
-    // If you want to wait for the next value, use `receiver.changed().await` instead.
+    //  To acess the next value, use `receiver.changed().await` instead.
 
     let message = receiver.borrow().clone(); // Clone the message to avoid borrowing issues
 
